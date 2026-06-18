@@ -48,5 +48,5 @@ while true; do
   fi
 
   echo "$ts   $line"
-  sleep 1
+  sleep 0.2
 done
