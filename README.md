@@ -108,14 +108,25 @@ It pulls both endpoints from Azure and prompts for the admin user and password �
 
 ---
 
-## The failover demo, three ways
+## The failover demo
 
-Failover is **triggered in the portal** (cluster -> High availability -> forced failover) — there's no CLI command for it. Pick the script by what you want to capture:
+Failover is triggered in the portal (cluster -> High availability -> forced failover).
+Run `04-failover-watch.sh` to watch it live:
 
-- `04-failover-watch.sh` — the demo. Polls once a second and reports, in plain language, whether the endpoint is serving (`up - primary, accepting writes` / `up - replica, serving reads` / `DOWN - not reachable`). On the read/write endpoint it also prints a measured `~Ns` gap when service recovers. Run it twice side by side — reader (no arg) and `rw` — so the audience sees reads stay up while writes blip.
-- **`06-failover-measure.py`** — sub-second precision via a persistent connection that reconnects fast. Needs a driver (`pip install --user "psycopg[binary]"`). Use this if you want a defensible millisecond figure.
+```bash
+# In two terminals, then trigger one forced failover in the portal:
+./scripts/04-failover-watch.sh        # terminal 1 - reader endpoint: reads stay up
+./scripts/04-failover-watch.sh rw     # terminal 2 - read/write endpoint: times the write gap
+```
 
-The sharpest story runs the reader watcher and the read/write timer side by side: **reads stayed up, writes paused ~1s, then resumed** — stronger than either number alone.
+It polls once a second and reports, in plain language, whether the endpoint is serving
+(`up - primary, accepting writes` / `up - replica, serving reads` / `DOWN - not reachable`).
+On the read/write endpoint it also prints a measured `~Ns` gap when service recovers — that's
+the failover number to show on camera. Reads on the reader endpoint should never drop.
+
+> Two more failover scripts are in `scripts/` for the curious: `05-failover-timer.sh`
+> (no-install back-to-back bash timer) and `06-failover-measure.py` (sub-second precision,
+> needs `pip install --user "psycopg[binary]"`).
 
 ---
 
