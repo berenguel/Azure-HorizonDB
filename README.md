@@ -47,7 +47,8 @@ After you push this repo, edit the button URL above: replace `USER`/`REPO` (and 
 
 ## Regions
 
-Preview is live in **Central US, West US 2, West US 3, Australia East, Sweden Central**, with more (East US, Canada Central, Japan East, Korea Central, Poland Central) rolling out. The failover step needs availability zones — Central US, Australia East, and Sweden Central all support them. Pick the closest live region and set it as `LOCATION` in `.env`.
+Preview is live in **Central US, West US 2, West US 3, Australia East, Sweden Central**. 
+The failover step needs availability zones — Central US, Australia East, and Sweden Central all support them.
 
 ---
 
