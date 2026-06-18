@@ -31,7 +31,7 @@ After you push this repo, edit the button URL above: replace `USER`/`REPO` (and 
 ## Prerequisites
 
 - **Azure CLI** and a **`psql`** client (an older `psql` against a newer server is fine — `psql` 16 talks to PG 17 here without issue).
-- A subscription enrolled in the HorizonDB preview.
+- An Azure subscription
 - Run `./scripts/00-prereqs.sh` once — it checks your tools, installs the preview `horizondb` extension, and **registers the resource provider** (required once per subscription, see below).
 
 ### Two things public preview does *not* save you from
