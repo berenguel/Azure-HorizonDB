@@ -1,5 +1,3 @@
-# Azure-HorizonDB
-
 # Intro to Azure HorizonDB
 
 A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cluster, load data, read from a replica, and survive a failover — proven end to end on a live cluster. Built for a video walkthrough and for field folks to re-run in front of customers.
