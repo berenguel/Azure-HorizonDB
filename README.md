@@ -76,7 +76,8 @@ psql "host=$RW_ENDPOINT port=5432 dbname=$DB_NAME user=$ADMIN_USER sslmode=requi
 ./scripts/99-teardown.sh           # delete everything when done
 ```
 
-Tune data size in `.env` (`CUSTOMERS`, `PRODUCTS`, `ORDERS`). Defaults give ~500k orders / ~1.25M line items. For a quick first take: `CUSTOMERS=5000 PRODUCTS=200 ORDERS=50000 ./scripts/02-load-data.sh`.
+Tune data size in `.env` (`CUSTOMERS`, `PRODUCTS`, `ORDERS`). Defaults give ~500k orders / ~1.25M line items. 
+For a quick first take: `CUSTOMERS=5000 PRODUCTS=200 ORDERS=50000 ./scripts/02-load-data.sh`.
 
 ### Existing cluster (or Cloud Shell after a disconnect)
 
