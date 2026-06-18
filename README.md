@@ -17,7 +17,6 @@ A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cl
 
 The replicas you provision in step 1 are the same nodes that serve reads in step 3 **and** stand in as failover targets in step 4 — a standby is readable and a failover candidate at once. 
 
-**Measured result from a real run (Sweden Central, 2 vCores, 2 replicas):** reads never dropped a single probe through a forced failover; the write path was unavailable for roughly **one second** while a standby was promoted. "Zero read downtime, ~1s write interruption" is the headline.
 
 ---
 
