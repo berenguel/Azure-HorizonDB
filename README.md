@@ -15,7 +15,7 @@ A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cl
 | 3 | Read scale-out from a replica | `psql` against the **reader** endpoint (and watch a write get rejected) |
 | 4 | Failover with no read downtime | Force it in the portal; time it from Cloud Shell |
 
-The replicas you provision in step 1 are the same nodes that serve reads in step 3 **and** stand in as failover targets in step 4 — a standby is readable and a failover candidate at once. That's why the whole thing hangs together as one story.
+The replicas you provision in step 1 are the same nodes that serve reads in step 3 **and** stand in as failover targets in step 4 — a standby is readable and a failover candidate at once. 
 
 **Measured result from a real run (Sweden Central, 2 vCores, 2 replicas):** reads never dropped a single probe through a forced failover; the write path was unavailable for roughly **one second** while a standby was promoted. "Zero read downtime, ~1s write interruption" is the headline.
 
