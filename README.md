@@ -22,7 +22,7 @@ The replicas you provision in step 1 are the same nodes that serve reads in step
 
 ## Deploy to Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FUSER%2FREPO%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fberenguel%2FAzure-HorizonDB%2Fmain%2Finfra%2Fazuredeploy.json)
 
 After you push this repo, edit the button URL above: replace `USER`/`REPO` (and `main` if your default branch differs) so it points at your raw `infra/azuredeploy.json`. The button opens the portal's custom-deployment blade pre-loaded with the template — you supply the admin password and pick a region.
 
