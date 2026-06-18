@@ -40,7 +40,7 @@ After you push this repo, edit the button URL above: replace `USER`/`REPO` (and 
   ```bash
   az provider register --namespace Microsoft.HorizonDb   # then wait for "Registered"
   ```
-  `00-prereqs.sh` does this and polls for you.
+ 
 - **The extension is preview-only**, so the first `az horizondb` call prompts to install it. `00-prereqs.sh` pre-sets `extension.dynamic_install_allow_preview=true` so it installs without interrupting a deploy.
 
 ---
