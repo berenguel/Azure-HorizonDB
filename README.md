@@ -64,7 +64,13 @@ cp .env.example .env        # edit the top block: subscription, region, admin us
 
 Set `SUBSCRIPTION` in `.env` (subscription **ID** is simplest — no quoting) and the scripts run `az account set` for you, so you never deploy into the wrong subscription.
 
-Then open the cluster's **Networking** page in the portal, **enable public access**, and **add a firewall rule for your client IP** (`curl -s ifconfig.me`). Networking is portal-only — the CLI extension doesn't expose it yet — so without this step `psql` can't connect.
+Then open the cluster's **Networking** page in the portal and **add a firewall rule for your client IP** 
+
+```bash
+curl -s ifconfig.me
+```
+
+Networking is portal-only — the CLI extension doesn't expose it yet — so without this step `psql` can't connect.
 
 Test the connection, then run the rest:
 
