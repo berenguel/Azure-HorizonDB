@@ -1,0 +1,89 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "Deploys a single Azure HorizonDB cluster for the intro demo (deploy -> load data -> read from replica -> failover). Preview resource provider Microsoft.HorizonDb, API 2026-01-20-preview."
+  },
+  "parameters": {
+    "clusterName": {
+      "type": "string",
+      "defaultValue": "[concat('horizon-', uniqueString(resourceGroup().id))]",
+      "minLength": 3,
+      "maxLength": 63,
+      "metadata": { "description": "Cluster name. Lowercase letters, numbers and hyphens only." }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": { "description": "Region. Must be a HorizonDB-enabled preview region." }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "defaultValue": "pgadmin",
+      "minLength": 1,
+      "maxLength": 63,
+      "metadata": { "description": "Admin login name." }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "minLength": 8,
+      "maxLength": 128,
+      "metadata": { "description": "Admin password (8-128 chars)." }
+    },
+    "vCores": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 1,
+      "maxValue": 96,
+      "metadata": { "description": "vCores per compute replica." }
+    },
+    "pgVersion": {
+      "type": "string",
+      "defaultValue": "17",
+      "metadata": { "description": "PostgreSQL major version." }
+    },
+    "replicaCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "minValue": 1,
+      "metadata": { "description": "Number of replicas. Use at least 2 for zonal resilience and to enable the reader endpoint + failover parts of the demo." }
+    },
+    "zonePlacementPolicy": {
+      "type": "string",
+      "defaultValue": "Strict",
+      "allowedValues": [ "BestEffort", "Strict" ],
+      "metadata": { "description": "How replicas are placed across availability zones." }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.HorizonDb/clusters",
+      "apiVersion": "2026-01-20-preview",
+      "name": "[parameters('clusterName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "createMode": "Create",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "vCores": "[parameters('vCores')]",
+        "version": "[parameters('pgVersion')]",
+        "replicaCount": "[parameters('replicaCount')]",
+        "zonePlacementPolicy": "[parameters('zonePlacementPolicy')]"
+      }
+    }
+  ],
+  "outputs": {
+    "clusterName": {
+      "type": "string",
+      "value": "[parameters('clusterName')]"
+    },
+    "clusterResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.HorizonDb/clusters', parameters('clusterName'))]"
+    },
+    "nextStep": {
+      "type": "string",
+      "value": "Open the cluster in the portal -> copy the read/write and reader endpoints from the Overview / Replicas page -> put them in .env, then run scripts/02-load-data.sh"
+    }
+  }
+}
