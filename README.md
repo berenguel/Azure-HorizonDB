@@ -53,7 +53,7 @@ The failover step needs availability zones — Central US, Australia East, and S
 
 ## Quickstart
 
-### Fresh deploy
+### Step 1: Fresh deploy
 
 ```bash
 git clone https://github.com/berenguel/Azure-HorizonDB.git
@@ -67,6 +67,7 @@ cp .env.example .env        # edit the top block: subscription, region, admin us
 
 Set `SUBSCRIPTION` in `.env` (subscription **ID** is simplest — no quoting) and the scripts run `az account set` for you, so you never deploy into the wrong subscription.
 
+### Step 1.1: Networking
 Then open the cluster's **Networking** page in the portal and **add a firewall rule for your client IP** 
 
 ```bash
@@ -75,40 +76,30 @@ curl -s ifconfig.me
 
 Networking is portal-only — the CLI extension doesn't expose it yet — so without this step `psql` can't connect.
 
-Test the connection, then run the rest:
+### Step 1.2: Test the connection
 
 ```bash
 source .env
 psql "host=$RW_ENDPOINT port=5432 dbname=$DB_NAME user=$ADMIN_USER sslmode=require" -c "select version();"
 
-./scripts/02-load-data.sh          # schema + synthetic data (read/write endpoint)
-./scripts/03-read-from-replica.sh  # analytics on the reader endpoint + proof it's read-only
-
-# In two terminals preferably, then trigger one forced failover in the portal:
-./scripts/04-failover-watch.sh        # terminal 1 - reader endpoint: reads stay up
-./scripts/04-failover-watch.sh rw     # terminal 2 - read/write endpoint: times the write gap
-
-# delete all
-./scripts/99-teardown.sh           # delete everything when done
 ```
+
+### Step 2: Load Data
 
 Tune data size in `.env` (`CUSTOMERS`, `PRODUCTS`, `ORDERS`). Defaults give ~500k orders / ~1.25M line items.
 For a quick first take: `CUSTOMERS=5000 PRODUCTS=200 ORDERS=50000 ./scripts/02-load-data.sh`.
 
-### Existing cluster (or Cloud Shell after a disconnect)
-
-Cloud Shell is ephemeral — a closed session loses your `.env`. The cluster is unaffected (it lives in Azure), so just rebuild `.env` from live state:
-
 ```bash
-./scripts/bootstrap-env.sh                                   # uses rg-horizon-demo / horizon-demo
-./scripts/bootstrap-env.sh <resource-group> <cluster-name>   # or name them
+./scripts/02-load-data.sh          # schema + synthetic data (read/write endpoint)
 ```
 
-It pulls both endpoints from Azure and prompts for the admin user and password — **Azure can't return those** (both are write-only and come back `null` from `az horizondb show`), so you must remember them.
+### Step 3: Read Scale out from a Replica
 
----
+```bash
+./scripts/03-read-from-replica.sh  # analytics on the reader endpoint + proof it's read-only
+```
 
-## The failover demo
+### Step 4: Failover demo 
 
 Failover is triggered in the portal (cluster -> High availability -> forced failover).
 Run `04-failover-watch.sh` to watch it live:
@@ -128,7 +119,26 @@ the failover number to show on camera. Reads on the reader endpoint should never
 > (no-install back-to-back bash timer) and `06-failover-measure.py` (sub-second precision,
 > needs `pip install --user "psycopg[binary]"`).
 
+
+### Step 5: Delete resources
+
+```bash
+# delete all
+./scripts/99-teardown.sh           # delete everything when done
+```
+
 ---
+### Existing cluster (or Cloud Shell after a disconnect)
+
+Cloud Shell is ephemeral — a closed session loses your `.env`. The cluster is unaffected (it lives in Azure), so just rebuild `.env` from live state:
+
+```bash
+./scripts/bootstrap-env.sh                                   # uses rg-horizon-demo / horizon-demo
+./scripts/bootstrap-env.sh <resource-group> <cluster-name>   # or name them
+```
+
+It pulls both endpoints from Azure and prompts for the admin user and password — **Azure can't return those** (both are write-only and come back `null` from `az horizondb show`), so you must remember them.
+
 
 ## Cost
 
