@@ -1,6 +1,6 @@
 # Intro to Azure HorizonDB
 
-A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cluster, load data, read from a replica, and survive a failover — proven end to end on a live cluster. Built for a video walkthrough and for field folks to re-run in front of customers.
+A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cluster, load data, read from a replica, and survive a failover — proven end to end on a live cluster.
 
 > Azure HorizonDB is in **public preview**. Resource provider `Microsoft.HorizonDb`, API `2026-01-20-preview`. Region availability and the CLI surface change often — pin a tested region and dry-run the whole thing before pointing a customer at it.
 
@@ -21,7 +21,7 @@ The replicas you provision in step 1 are the same nodes that serve reads in step
 
 ## Deploy to Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FUSER%2FREPO%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fberenguel%2FAzure-HorizonDB%2Fmain%2Finfra%2Fazuredeploy.json)
 
 After you push this repo, edit the button URL above: replace `USER`/`REPO` (and `main` if your default branch differs) so it points at your raw `infra/azuredeploy.json`. The button opens the portal's custom-deployment blade pre-loaded with the template — you supply the admin password and pick a region.
 
@@ -62,7 +62,7 @@ cp .env.example .env        # edit the top block: subscription, region, admin us
 ./scripts/01-deploy-cli.sh  # create the cluster (several minutes); writes endpoints into .env
 ```
 
-Set `SUBSCRIPTION` in `.env` (subscription **ID** is simplest — no quoting) and the scripts run `az account set` for you, so you never deploy into the wrong subscription. Leave it blank to use whatever is currently active.
+Set `SUBSCRIPTION` in `.env` (subscription **ID** is simplest — no quoting) and the scripts run `az account set` for you, so you never deploy into the wrong subscription.
 
 Then open the cluster's **Networking** page in the portal, **enable public access**, and **add a firewall rule for your client IP** (`curl -s ifconfig.me`). Networking is portal-only — the CLI extension doesn't expose it yet — so without this step `psql` can't connect.
 
