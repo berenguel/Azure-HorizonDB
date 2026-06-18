@@ -10,49 +10,61 @@
       "defaultValue": "[concat('horizon-', uniqueString(resourceGroup().id))]",
       "minLength": 3,
       "maxLength": 63,
-      "metadata": { "description": "Cluster name. Lowercase letters, numbers and hyphens only." }
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": { "description": "Region. Must be a HorizonDB-enabled preview region." }
+      "metadata": {
+        "description": "Cluster name. Lowercase letters, numbers and hyphens only."
+      }
     },
     "administratorLogin": {
       "type": "string",
       "defaultValue": "pgadmin",
       "minLength": 1,
       "maxLength": 63,
-      "metadata": { "description": "Admin login name." }
+      "metadata": {
+        "description": "Admin login name."
+      }
     },
     "administratorLoginPassword": {
       "type": "securestring",
       "minLength": 8,
       "maxLength": 128,
-      "metadata": { "description": "Admin password (8-128 chars)." }
+      "metadata": {
+        "description": "Admin password (8-128 chars)."
+      }
     },
     "vCores": {
       "type": "int",
       "defaultValue": 2,
       "minValue": 1,
       "maxValue": 96,
-      "metadata": { "description": "vCores per compute replica." }
+      "metadata": {
+        "description": "vCores per compute replica."
+      }
     },
     "pgVersion": {
       "type": "string",
       "defaultValue": "17",
-      "metadata": { "description": "PostgreSQL major version." }
+      "metadata": {
+        "description": "PostgreSQL major version."
+      }
     },
     "replicaCount": {
       "type": "int",
       "defaultValue": 2,
       "minValue": 1,
-      "metadata": { "description": "Number of replicas. Use at least 2 for zonal resilience and to enable the reader endpoint + failover parts of the demo." }
+      "metadata": {
+        "description": "Number of replicas. Use at least 2 for zonal resilience and to enable the reader endpoint + failover parts of the demo."
+      }
     },
     "zonePlacementPolicy": {
       "type": "string",
       "defaultValue": "Strict",
-      "allowedValues": [ "BestEffort", "Strict" ],
-      "metadata": { "description": "How replicas are placed across availability zones." }
+      "allowedValues": [
+        "BestEffort",
+        "Strict"
+      ],
+      "metadata": {
+        "description": "How replicas are placed across availability zones."
+      }
     }
   },
   "resources": [
@@ -60,7 +72,7 @@
       "type": "Microsoft.HorizonDb/clusters",
       "apiVersion": "2026-01-20-preview",
       "name": "[parameters('clusterName')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "createMode": "Create",
         "administratorLogin": "[parameters('administratorLogin')]",

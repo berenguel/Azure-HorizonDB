@@ -7,9 +7,6 @@
 @description('Cluster name. Lowercase letters, numbers and hyphens only.')
 param clusterName string = 'horizon-${uniqueString(resourceGroup().id)}'
 
-@description('Region. Must be a HorizonDB-enabled preview region.')
-param location string = resourceGroup().location
-
 @minLength(1)
 @maxLength(63)
 @description('Admin login name.')
@@ -39,7 +36,7 @@ param zonePlacementPolicy string = 'Strict'
 
 resource cluster 'Microsoft.HorizonDb/clusters@2026-01-20-preview' = {
   name: clusterName
-  location: location
+  location: resourceGroup().location
   properties: {
     createMode: 'Create'
     administratorLogin: administratorLogin

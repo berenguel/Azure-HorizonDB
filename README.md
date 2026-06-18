@@ -15,14 +15,13 @@ A short, runnable demo for getting started with **Azure HorizonDB**: deploy a cl
 | 3 | Read scale-out from a replica | `psql` against the **reader** endpoint (and watch a write get rejected) |
 | 4 | Failover with no read downtime | Force it in the portal; time it from Cloud Shell |
 
-The replicas you provision in step 1 are the same nodes that serve reads in step 3 **and** stand in as failover targets in step 4 — a standby is readable and a failover candidate at once. 
-
+The replicas you provision in step 1 are the same nodes that serve reads in step 3 **and** stand in as failover targets in step 4 — a standby is readable and a failover candidate at once.
 
 ---
 
 ## Deploy to Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fberenguel%2FAzure-HorizonDB%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FUSER%2FREPO%2Fmain%2Finfra%2Fazuredeploy.json)
 
 After you push this repo, edit the button URL above: replace `USER`/`REPO` (and `main` if your default branch differs) so it points at your raw `infra/azuredeploy.json`. The button opens the portal's custom-deployment blade pre-loaded with the template — you supply the admin password and pick a region.
 
@@ -40,14 +39,14 @@ After you push this repo, edit the button URL above: replace `USER`/`REPO` (and 
   ```bash
   az provider register --namespace Microsoft.HorizonDb   # then wait for "Registered"
   ```
- 
+
 - **The extension is preview-only**, so the first `az horizondb` call prompts to install it. `00-prereqs.sh` pre-sets `extension.dynamic_install_allow_preview=true` so it installs without interrupting a deploy.
 
 ---
 
 ## Regions
 
-Preview is live in **Central US, West US 2, West US 3, Australia East, Sweden Central**. 
+Preview is live in **Central US, West US 2, West US 3, Australia East, Sweden Central**.
 The failover step needs availability zones — Central US, Australia East, and Sweden Central all support them.
 
 ---
@@ -57,10 +56,13 @@ The failover step needs availability zones — Central US, Australia East, and S
 ### Fresh deploy
 
 ```bash
-cp .env.example .env        # edit the top block: region, admin user, password
-./scripts/00-prereqs.sh     # tools + extension + provider registration
+chmod +x scripts/*.sh       # a fresh clone may not carry the executable bit
+cp .env.example .env        # edit the top block: subscription, region, admin user, password
+./scripts/00-prereqs.sh     # subscription + tools + extension + provider registration
 ./scripts/01-deploy-cli.sh  # create the cluster (several minutes); writes endpoints into .env
 ```
+
+Set `SUBSCRIPTION` in `.env` (subscription **ID** is simplest — no quoting) and the scripts run `az account set` for you, so you never deploy into the wrong subscription. Leave it blank to use whatever is currently active.
 
 Then open the cluster's **Networking** page in the portal, **enable public access**, and **add a firewall rule for your client IP** (`curl -s ifconfig.me`). Networking is portal-only — the CLI extension doesn't expose it yet — so without this step `psql` can't connect.
 
@@ -76,7 +78,7 @@ psql "host=$RW_ENDPOINT port=5432 dbname=$DB_NAME user=$ADMIN_USER sslmode=requi
 ./scripts/99-teardown.sh           # delete everything when done
 ```
 
-Tune data size in `.env` (`CUSTOMERS`, `PRODUCTS`, `ORDERS`). Defaults give ~500k orders / ~1.25M line items. 
+Tune data size in `.env` (`CUSTOMERS`, `PRODUCTS`, `ORDERS`). Defaults give ~500k orders / ~1.25M line items.
 For a quick first take: `CUSTOMERS=5000 PRODUCTS=200 ORDERS=50000 ./scripts/02-load-data.sh`.
 
 ### Existing cluster (or Cloud Shell after a disconnect)
@@ -139,4 +141,3 @@ scripts/    00 prereqs, 01 deploy, 02 load, 03 replica read, 04 watch, 05 timer,
 sql/        schema.sql, seed.sql, read-queries.sql
 .env.example
 ```
-
